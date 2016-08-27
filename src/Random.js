@@ -1,9 +1,19 @@
+import { Color } from 'svgjs'
+
+export function intRange (from, to) {
+  return Math.floor(from + Math.random() * (to - from))
+}
+
 export function range (from, to) {
   return from + Math.random() * (to - from)
 }
 
 export function color () {
-  return `#${Math.floor(Math.random() * 255 * 255 * 255).toString(16)}`
+  return new Color({
+    r: intRange(0, 255),
+    g: intRange(0, 255),
+    b: intRange(0, 255),
+  })
 }
 
 export function angle() {
