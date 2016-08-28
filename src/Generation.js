@@ -2,6 +2,7 @@ import * as NodeType from './constants/NodeType'
 import * as Random from './Random'
 import { times } from 'lodash'
 
+/*
 const MinHeadNodeLength = 20
 const MaxHeadNodeLength = 40
 const MinBodyNodeLength = 60
@@ -155,5 +156,37 @@ export default function generateBody () {
       generateTailNode(),
       ...times(6, generateShapeNode)
     ]
+  }
+}
+*/
+
+export default function generate() {
+  return {
+    type: NodeType.CORE,
+    radius: [Random.range(30, 50), Random.range(40, 60)],
+    colors: [Random.color(), Random.color()],
+    mirror: false,
+    children: [{
+      type: NodeType.BALL_JOINT,
+      position: [Random.range(0, 0.25), Random.range(0.6, 1)],
+      rotation: Random.range(0, 30),
+      radius: Random.range(10, 30),
+      colors: [Random.color(), Random.color()],
+      children: [{
+        type: NodeType.SEGMENT,
+        width: Random.range(10, 20),
+        length: Random.range(30, 50),
+        colors: [Random.color(), Random.color()],
+        children: [{
+          type: NodeType.BALL_JOINT,
+          position: [0, 1],
+          rotation: Random.range(0, 30),
+          radius: Random.range(10, 30),
+          colors: [Random.color(), Random.color()],
+          children: []
+        }]
+      }],
+      mirror: true,
+    }]
   }
 }

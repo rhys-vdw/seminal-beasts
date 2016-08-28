@@ -1,7 +1,7 @@
-import { Color } from 'svgjs'
+import Color from 'tinycolor2'
 
 export function intRange (from, to) {
-  return Math.floor(from + Math.random() * (to - from))
+  return Math.floor(range(from, to))
 }
 
 export function range (from, to) {
@@ -9,10 +9,10 @@ export function range (from, to) {
 }
 
 export function color () {
-  return new Color({
-    r: intRange(0, 255),
-    g: intRange(0, 255),
-    b: intRange(0, 255),
+  return Color.fromRatio({
+    h: Math.random(),
+    s: Math.random(),
+    l: range(0.2, 0.8),
   })
 }
 
