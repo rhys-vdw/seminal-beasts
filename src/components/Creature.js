@@ -4,12 +4,12 @@ import Vector from 'victor'
 import * as Random from '../Random'
 
 function Iris({ node }) {
-  const { radius, colors, pupilSize } = node
+  const { size, colors, pupilSize } = node
   return (
     <g>
       <ellipse
         cx={0} cy={0}
-        rx={radius} ry={radius}
+        rx={size} ry={size}
         fill={colors[0]}
       />
       <ellipse
@@ -79,7 +79,7 @@ class BallJoint extends PureComponent {
 
   render() {
     const { node, children } = this.props
-    const { radius, colors } = node
+    const { size, colors } = node
     const { angle } = this.state
     return (
       <g
@@ -88,7 +88,7 @@ class BallJoint extends PureComponent {
       >
         <ellipse
           cx={0} cy={0}
-          rx={radius} ry={radius}
+          rx={size} ry={size}
           fill={colors[0]}
         />
         { children }
@@ -98,12 +98,12 @@ class BallJoint extends PureComponent {
 }
 
 function Segment({ node, children }) {
-  const { width, radius, colors } = node
+  const { width, size, colors } = node
   return (
     <g className='Segment'>
       <ellipse
-        cx={0} cy={radius[1]}
-        rx={radius[0]} ry={radius[1]}
+        cx={0} cy={size[1]}
+        rx={size[0]} ry={size[1]}
         fill={colors[0]}
       />
       { children }
@@ -112,12 +112,12 @@ function Segment({ node, children }) {
 }
 
 function Mouth({ node }) {
-  const { radius, colors } = node
+  const { size, colors } = node
   return (
     <g className='Mouth'>
       <rect
-        x={-radius[0] / 2} y={-radius[1] / 2}
-        width={radius[0]} height={radius[1]}
+        x={-size[0] / 2} y={-size[1] / 2}
+        width={size[0]} height={size[1]}
         fill={'black'}
         stroke={colors[0]}
         strokeWidth={node.lipThickness}
@@ -129,12 +129,12 @@ function Mouth({ node }) {
 }
 
 function Core({ node, children }) {
-  const { radius, colors } = node
+  const { size, colors } = node
   return (
     <g className='Core'>
       <ellipse
         cx={0} cy={0}
-        rx={radius[0]} ry={radius[1]}
+        rx={size[0]} ry={size[1]}
         fill={colors[0]}
       />
       { children }
@@ -161,9 +161,9 @@ function groupTransform(parent, node, isMirrored) {
 
   const scale = node.scale || 1
 
-  const translationScale = Vector.fromArray(Array.isArray(parent.radius)
-    ? parent.radius
-    : [parent.radius, parent.radius])
+  const translationScale = Vector.fromArray(Array.isArray(parent.size)
+    ? parent.size
+    : [parent.size, parent.size])
 
   const translation = new Vector(0, position[1])
     .rotateDeg(position[0] * 180)
@@ -212,7 +212,7 @@ function Node({ node, parent, isMirrored }) {
 }
 
 const DEFAULT_PARENT = {
-  radius: [1, 1],
+  size: [1, 1],
   rotation: 0,
 }
 
