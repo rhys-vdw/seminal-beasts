@@ -26,21 +26,26 @@ function Iris({ node }) {
   )
 }
 
-function Eye({ node }, { isBlinking }) {
+function Eye({ node, children }, { isBlinking }) {
   const scaleY = isBlinking ? 0 : 1;
   return (
-    <ellipse
+    <g
+      className='Eye'
       style={{
         transform: `scale(1, ${scaleY})`,
-        transition: `transform 0.1s ease-out`
+        transition: `transform 50 ease-out`
       }}
-      className="eye"
-      cx={0} cy={0}
-      rx={1} ry={1}
-      stroke='rgb(100, 100, 100)'
-      strokeWidth={0.3}
-      fill='white'
-    />
+    >
+      <ellipse
+        className="eye"
+        cx={0} cy={0}
+        rx={1} ry={1}
+        stroke='rgb(100, 100, 100)'
+        strokeWidth={0.3}
+        fill='white'
+      />
+      { children }
+    </g>
   )
 }
 
@@ -48,51 +53,62 @@ Eye.contextTypes = {
   isBlinking: PropTypes.bool.isRequired,
 }
 
-function BallJoint({ node }) {
+function BallJoint({ node, children }) {
   const { radius, colors } = node
   return (
-    <ellipse
-      cx={0} cy={0}
-      rx={radius} ry={radius}
-      fill={colors[0]}
-    />
+    <g className='BallJoint'>
+      <ellipse
+        cx={0} cy={0}
+        rx={radius} ry={radius}
+        fill={colors[0]}
+      />
+      { children }
+    </g>
   )
 }
 
-function Segment({ node }) {
+function Segment({ node, children }) {
   const { width, radius, colors } = node
   return (
-    <ellipse
-      cx={0} cy={radius[1]}
-      rx={radius[0]} ry={radius[1]}
-      fill={colors[0]}
-    />
+    <g className='Segment'>
+      <ellipse
+        cx={0} cy={radius[1]}
+        rx={radius[0]} ry={radius[1]}
+        fill={colors[0]}
+      />
+      { children }
+    </g>
   )
 }
 
 function Mouth({ node }) {
   const { radius, colors } = node
   return (
-    <rect
-      x={-radius[0] / 2} y={-radius[1] / 2}
-      width={radius[0]} height={radius[1]}
-      fill={'black'}
-      stroke={colors[0]}
-      strokeWidth={8}
-      rx={4}
-      ry={4}
-    />
+    <g className='Mouth'>
+      <rect
+        x={-radius[0] / 2} y={-radius[1] / 2}
+        width={radius[0]} height={radius[1]}
+        fill={'black'}
+        stroke={colors[0]}
+        strokeWidth={8}
+        rx={4}
+        ry={4}
+      />
+    </g>
   )
 }
 
-function Core({ node }) {
+function Core({ node, children }) {
   const { radius, colors } = node
   return (
-    <ellipse
-      cx={0} cy={0}
-      rx={radius[0]} ry={radius[1]}
-      fill={colors[0]}
-    />
+    <g className='Core'>
+      <ellipse
+        cx={0} cy={0}
+        rx={radius[0]} ry={radius[1]}
+        fill={colors[0]}
+      />
+      { children }
+    </g>
   )
 }
 
@@ -158,8 +174,9 @@ function Node({ node, parent, isMirrored }) {
       className={node.type}
       style={{ transform: groupTransform(parent, node, isMirrored) }}
     >
-      <NodeComponent node={node} />
-      { children }
+      <NodeComponent node={node}>
+        { children }
+      </NodeComponent>
     </g>
   )
 }
