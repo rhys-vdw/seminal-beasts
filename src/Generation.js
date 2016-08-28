@@ -1,43 +1,55 @@
 import * as NodeType from './constants/NodeType'
 import * as Random from './Random'
-import { times, last } from 'lodash'
+import { flatMap, times, last } from 'lodash'
 
-function generateLimb({ rotation, position }, nextColor) {
+function nestNodes(nodes) {
+  for (let i = 0; i < nodes.length - 1; i++) {
+    nodes[i].children.push(nodes[i + 1])
+  }
+}
+
+function createBallJoint({ position, rotation, mirror }, nextColor) {
   return {
     type: NodeType.BALL_JOINT,
     position,
     rotation,
-    maxAngle: 20,
+    maxAngle: Random.range(5, 90),
     size: Random.range(10, 40),
     color: nextColor(),
-    mirror: true,
+    mirror,
     layer: 1,
-    children: [{
-      type: NodeType.SEGMENT,
-      size: [
-        Random.range(10, 20),
-        Random.range(10, 50)
-      ],
-      color: nextColor(),
-      children: [{
-        type: NodeType.BALL_JOINT,
-        maxAngle: 20,
-        position: [0, 2],
-        rotation: Random.range(-20, 70),
-        size: Random.range(10, 30),
-        color: nextColor(),
-        children: [{
-          type: NodeType.SEGMENT,
-          size: [
-            Random.range(10, 20),
-            Random.range(30, 50)
-          ],
-          color: nextColor(),
-          children: []
-        }]
-      }]
-    }]
+    children: []
   }
+}
+
+function generateLimb({ rotation, position }, nextColor) {
+  const nodes = flatMap(times(Random.range(1, 5), index => {
+    return [
+      createBallJoint(index === 0
+        ? { position, rotation, mirror: true }
+        : {
+            position: [0, 2],
+            rotation: Random.range(-20, 70),
+            mirror: Random.chance(0.2)
+          }
+      , nextColor),
+      {
+        type: NodeType.SEGMENT,
+        size: [
+          Random.range(10, 20),
+          Random.range(10, 50)
+        ],
+        color: nextColor(),
+        children: []
+      }
+    ]
+  }))
+
+  nestNodes(nodes);
+
+  console.log(nodes);
+
+  return nodes[0]
 }
 
 function generateHead(nextColor) {
@@ -103,7 +115,7 @@ function colorMutator(initialColor) {
 
 function generateSpine(nextColor) {
 
-  const cores = times(Random.range(1, 5), index => ({
+  const cores = times(Random.range(1, 6), index => ({
     type: NodeType.CORE,
     size: [Random.range(15, 50), Random.range(15, 40)],
     position: [0, index === 0 ? 0 : -1],
@@ -117,9 +129,7 @@ function generateSpine(nextColor) {
     )
   }))
 
-  for (let i = 0; i < cores.length - 1; i++) {
-    cores[i].children.push(cores[i + 1])
-  }
+  nestNodes(cores);
 
   last(cores).children.push(generateNeck(nextColor))
 

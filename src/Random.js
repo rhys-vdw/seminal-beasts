@@ -8,6 +8,10 @@ export function range (from, to) {
   return from + Math.random() * (to - from)
 }
 
+export function chance (probability) {
+  return Math.random() < probability
+}
+
 export function color () {
   return Color.fromRatio({
     h: Math.random(),
