@@ -1,5 +1,6 @@
 import * as NodeType from './constants/NodeType'
 import * as Random from './Random'
+import { times, last } from 'lodash'
 
 function generateLimb({ rotation, position }, nextColor) {
   return {
@@ -100,35 +101,32 @@ function colorMutator(initialColor) {
   }
 }
 
-export default function generate() {
-  const nextColor = colorMutator(Random.color())
-  return {
+function generateSpine(nextColor) {
+
+  const cores = times(Random.range(1, 5), index => ({
     type: NodeType.CORE,
     size: [Random.range(15, 50), Random.range(15, 40)],
+    position: [0, index === 0 ? 0 : -1],
     color: nextColor(),
     mirror: false,
-    children: [
+    children: times(Random.range(0, 2), () =>
       generateLimb({
-        rotation: Random.range(0, 30),
+        rotation: Random.range(0, 180),
         position: [Random.range(0.1, 0.4), Random.range(0.6, 1)]
-      }, nextColor), {
-      type: NodeType.CORE,
-      position: [0, -1],
-      size: [Random.range(20, 40), Random.range(30, 50)],
-      color: nextColor(),
-      children: [{
-        type: NodeType.CORE,
-        position: [0, -1],
-        size: [Random.range(30, 80), Random.range(30, 80)],
-        color: nextColor(),
-        children: [
-          generateLimb({
-            rotation: Random.range(50, 80),
-            position: [Random.range(0.4, 0.8), Random.range(0.6, 1)]
-          }, nextColor),
-          generateNeck(nextColor)
-        ]
-      }]
-    }]
+      }, nextColor)
+    )
+  }))
+
+  for (let i = 0; i < cores.length - 1; i++) {
+    cores[i].children.push(cores[i + 1])
   }
+
+  last(cores).children.push(generateNeck(nextColor))
+
+  return cores[0]
+}
+
+export default function generate() {
+  const nextColor = colorMutator(Random.color())
+  return generateSpine(nextColor)
 }
