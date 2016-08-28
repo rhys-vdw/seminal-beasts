@@ -13,6 +13,7 @@ export function color () {
     h: Math.random(),
     s: Math.random(),
     l: range(0.2, 0.8),
+    a: 0.95
   })
 }
 

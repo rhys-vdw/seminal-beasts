@@ -2,6 +2,18 @@ import React from 'react'
 import * as NodeType from '../constants/NodeType'
 import Vector from 'victor'
 
+function Eye({ node }) {
+  return (
+    <ellipse
+      cx={0} cy={0}
+      rx={1} ry={1}
+      stroke='brown'
+      strokeWidth={0.3}
+      fill='white'
+    />
+  )
+}
+
 function BallJoint({ node }) {
   const { radius, colors } = node
   return (
@@ -24,6 +36,20 @@ function Segment({ node }) {
   )
 }
 
+function Mouth({ node }) {
+  const { radius, colors } = node
+  return (
+    <rect
+      x={-radius[0] / 2} y={-radius[1] / 2}
+      width={radius[0]} height={radius[1]}
+      fill={'black'}
+      stroke={colors[0]}
+      strokeWidth={8}
+      rx={4}
+      ry={4}
+    />
+  )
+}
 
 function Core({ node }) {
   const { radius, colors } = node
@@ -40,27 +66,32 @@ const componentByType = {
   [NodeType.CORE]: Core,
   [NodeType.BALL_JOINT]: BallJoint,
   [NodeType.SEGMENT]: Segment,
+  [NodeType.MOUTH]: Mouth,
+  [NodeType.EYE]: Eye,
 }
 
 function groupTransform(parent, node, isMirrored) {
 
   const mirrorSign = isMirrored ? -1 : 1
 
-  const scale = Vector.fromArray(Array.isArray(parent.radius)
-    ? parent.radius
-    : [parent.radius, parent.radius])
-
   const rotation = node.rotation || 0
 
   const position = node.position || [0, 0]
 
+  const scale = node.scale || 1
+
+  const translationScale = Vector.fromArray(Array.isArray(parent.radius)
+    ? parent.radius
+    : [parent.radius, parent.radius])
+
   const translation = new Vector(0, position[1])
     .rotateDeg(position[0] * 180)
-    .multiply(scale)
+    .multiply(translationScale)
+
 
   console.log(translation.toString())
 
-  return `scale(${mirrorSign}, 1)translate(${translation.x}, ${translation.y})rotate(${rotation})`
+  return `scale(${mirrorSign}, 1)translate(${translation.x}, ${translation.y})rotate(${rotation})scale(${scale})`
 }
 
 function Node({ node, parent, isMirrored }) {
