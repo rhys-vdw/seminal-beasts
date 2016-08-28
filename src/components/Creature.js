@@ -108,9 +108,12 @@ function groupTransform(parent, node, isMirrored) {
     .multiply(translationScale)
 
 
-  console.log(translation.toString())
-
-  return `scale(${mirrorSign}, 1)translate(${translation.x}, ${translation.y})rotate(${rotation})scale(${scale})`
+  return [
+    `scale(${mirrorSign}, 1)`,
+    `translate(${translation.x}, ${translation.y})`,
+    `rotate(${rotation})`,
+    `scale(${scale})`
+  ].join('')
 }
 
 function Node({ node, parent, isMirrored }) {
