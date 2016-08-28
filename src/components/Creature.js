@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { PureComponent, PropTypes } from 'react'
 import * as NodeType from '../constants/NodeType'
 import Vector from 'victor'
+import * as Random from '../Random'
 
 function Iris({ node }) {
   const { radius, colors, pupilSize } = node
@@ -16,20 +17,35 @@ function Iris({ node }) {
         rx={pupilSize} ry={pupilSize}
         fill='black'
       />
+      <ellipse
+        cx={-0.1} cy={0.1}
+        rx={pupilSize * 0.2} ry={pupilSize * 0.2}
+        fill='white'
+      />
     </g>
   )
 }
 
-function Eye({ node }) {
+function Eye({ node }, { isBlinking }) {
+  const scaleY = isBlinking ? 0 : 1;
   return (
     <ellipse
+      style={{
+        transform: `scale(1, ${scaleY})`,
+        transition: `transform 0.1s ease-out`
+      }}
+      className="eye"
       cx={0} cy={0}
       rx={1} ry={1}
-      stroke='brown'
+      stroke='rgb(100, 100, 100)'
       strokeWidth={0.3}
       fill='white'
     />
   )
+}
+
+Eye.contextTypes = {
+  isBlinking: PropTypes.bool.isRequired,
 }
 
 function BallJoint({ node }) {
@@ -107,13 +123,12 @@ function groupTransform(parent, node, isMirrored) {
     .rotateDeg(position[0] * 180)
     .multiply(translationScale)
 
-
   return [
     `scale(${mirrorSign}, 1)`,
-    `translate(${translation.x}, ${translation.y})`,
-    `rotate(${rotation})`,
+    `translate(${translation.x}px, ${translation.y}px)`,
+    `rotate(${rotation}deg)`,
     `scale(${scale})`
-  ].join('')
+  ].join(' ')
 }
 
 function Node({ node, parent, isMirrored }) {
@@ -140,8 +155,8 @@ function Node({ node, parent, isMirrored }) {
 
   return (
     <g
-      className={node.type + ' ' + isMirrored}
-      transform={groupTransform(parent, node, isMirrored)}
+      className={node.type}
+      style={{ transform: groupTransform(parent, node, isMirrored) }}
     >
       <NodeComponent node={node} />
       { children }
@@ -154,12 +169,46 @@ const DEFAULT_PARENT = {
   rotation: 0,
 }
 
-export default function CreatureContainer({ creature, width, height }) {
-  return (
-    <svg width={width} height={height}>
-      <g transform={`translate(${width / 2}, ${height / 2})`}>
-        <Node node={creature} parent={DEFAULT_PARENT} />
-      </g>
-    </svg>
-  )
+export default class Creature extends PureComponent {
+
+  constructor(props) {
+    super(props)
+    this.state = { isBlinking: false }
+    this.updateBlink = this.updateBlink.bind(this)
+  }
+
+  updateBlink() {
+    const { isBlinking } = this.state;
+    this.setState({ isBlinking: !isBlinking })
+
+    const duration = isBlinking
+      ? Random.range(500, 5000)
+      : Random.range(200, 300)
+
+    this.timeoutId = setTimeout(this.updateBlink, duration)
+  }
+
+  componentDidMount() {
+    this.updateBlink()
+  }
+
+  getChildContext() {
+    const { isBlinking } = this.state
+    return { isBlinking }
+  }
+
+  render() {
+    const { creature, width, height } = this.props;
+    return (
+      <svg width={width} height={height}>
+        <g transform={`translate(${width / 2}, ${height / 2})`}>
+          <Node node={creature} parent={DEFAULT_PARENT} />
+        </g>
+      </svg>
+    )
+  }
+}
+
+Creature.childContextTypes = {
+  isBlinking: PropTypes.bool.isRequired,
 }

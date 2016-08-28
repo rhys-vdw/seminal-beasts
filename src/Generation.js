@@ -14,13 +14,13 @@ function generateLimb({ rotation, position }) {
       type: NodeType.SEGMENT,
       radius: [
         Random.range(10, 20),
-        Random.range(30, 50)
+        Random.range(10, 50)
       ],
       colors: [Random.color(), Random.color()],
       children: [{
         type: NodeType.BALL_JOINT,
         position: [0, 2],
-        rotation: Random.range(-20, 40),
+        rotation: Random.range(-20, 70),
         radius: Random.range(10, 30),
         colors: [Random.color(), Random.color()],
         children: [{
@@ -37,14 +37,11 @@ function generateLimb({ rotation, position }) {
   }
 }
 
-function generateEye() {
-}
-
 function generateHead() {
   return {
     type: NodeType.CORE,
     position: [0, 2],
-    radius: [Random.range(30, 50), Random.range(30, 50)],
+    radius: [Random.range(20, 60), Random.range(20, 60)],
     colors: [Random.color(), Random.color()],
     children: [{
       type: NodeType.MOUTH,
@@ -56,7 +53,7 @@ function generateHead() {
       type: NodeType.EYE,
       scale: Random.range(3, 20),
       mirror: true,
-      position: [Random.range(0.1, 0.5), Random.range(0.3, 1)],
+      position: [Random.range(0.2, 0.5), Random.range(0.3, 1)],
       children: [{
         type: NodeType.IRIS,
         radius: Random.range(0.1, 0.7),
@@ -104,7 +101,7 @@ export default function generate() {
       children: [{
         type: NodeType.CORE,
         position: [0, -1],
-        radius: [Random.range(40, 60), Random.range(40, 60)],
+        radius: [Random.range(30, 80), Random.range(30, 80)],
         colors: [Random.color(), Random.color()],
         children: [
           generateLimb({
