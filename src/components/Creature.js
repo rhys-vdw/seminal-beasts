@@ -111,25 +111,70 @@ function Segment({ node, children }) {
   )
 }
 
-function Mouth({ node }) {
-  const { size, color, curve } = node
-  return (
-    <g className='Mouth'>
-      <path
-        d={[
-          `M ${-size[0] / 2} 0`,
-          `Q 0 ${curve}, ${size[0] / 2} 0`
-        ].join(' ')}
-        fill={'transparent'}
-        stroke={color}
-        strokeWidth={node.lipThickness}
-        rx={node.borderRadiusX}
-        ry={node.borderRadiusY}
-        strokeLinecap="round"
-      />
+class Mouth extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = { isSucking: true }
+    this.handleMouseOver = this.handleMouseOver.bind(this)
+    this.handleMouseLeave = this.handleMouseLeave.bind(this)
+  }
 
-    </g>
-  )
+  handleMouseOver() {
+    this.setState({ isSucking: true })
+  }
+
+  handleMouseLeave() {
+    this.setState({ isSucking: false })
+  }
+
+  componentDidMount() {
+    this.setState({ isSucking: false })
+  }
+
+  render() {
+    const { node } = this.props;
+    const { size, color, curve } = node;
+    const { isSucking } = this.state;
+
+    const halfWidth = size[0] / 2
+
+    return (
+      <g className='Mouth'
+      >
+        { !isSucking && (
+          <path
+            d={[
+              `M ${-halfWidth} 0`,
+              `Q 0 ${curve}, ${halfWidth} 0`
+            ].join(' ')}
+            fill={'transparent'}
+            stroke={color}
+            strokeWidth={node.lipThickness * 2}
+            strokeLinecap="round"
+          />
+        ) }
+        { isSucking && (
+          <ellipse
+            cx={0} cy={0}
+            rx={Math.max(15, halfWidth)}
+            ry={Math.max(15, halfWidth)}
+            fill='black'
+            stroke={color}
+            strokeWidth={node.lipThickness}
+          />
+        ) }
+        <ellipse
+          cx={0} cy={0}
+          rx={30}
+          ry={30}
+          fill='transparent'
+          strokeWidth={0}
+          onMouseOver={this.handleMouseOver}
+          onMouseLeave={this.handleMouseLeave}
+        />
+      </g>
+    )
+  }
 
   /*
       <rect

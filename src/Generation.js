@@ -60,7 +60,7 @@ function generateHead(nextColor) {
       type: NodeType.MOUTH,
       color: Random.color(),
       size: [Random.range(10, 40), Random.range(1, 30)],
-      lipThickness: Random.range(3, 20),
+      lipThickness: Random.range(1, 10),
       curve: Random.range(10, -20),
       position: [0, -Random.range(0.1, 0.9)],
       children: []
