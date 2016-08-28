@@ -1,5 +1,4 @@
-export const ROOT = 'ROOT'
-export const SPINE = 'SPINE'
+export const CORE = 'CORE'
 export const LEVER_JOINT = 'LEVER_JOINT'
 export const BALL_JOINT = 'BALL_JOINT'
 export const SEGMENT = 'SEGMENT'

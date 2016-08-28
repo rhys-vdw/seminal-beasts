@@ -160,33 +160,59 @@ export default function generateBody () {
 }
 */
 
-export default function generate() {
+function generateLimb() {
   return {
-    type: NodeType.CORE,
-    radius: [Random.range(30, 50), Random.range(40, 60)],
+    type: NodeType.BALL_JOINT,
+    position: [Random.range(0.1, 0.4), Random.range(0.6, 1)],
+    rotation: Random.range(0, 30),
+    radius: Random.range(10, 30),
     colors: [Random.color(), Random.color()],
-    mirror: false,
+    mirror: true,
     children: [{
-      type: NodeType.BALL_JOINT,
-      position: [Random.range(0, 0.25), Random.range(0.6, 1)],
-      rotation: Random.range(0, 30),
-      radius: Random.range(10, 30),
+      type: NodeType.SEGMENT,
+      radius: [
+        Random.range(10, 20),
+        Random.range(30, 50)
+      ],
       colors: [Random.color(), Random.color()],
       children: [{
-        type: NodeType.SEGMENT,
-        width: Random.range(10, 20),
-        length: Random.range(30, 50),
+        type: NodeType.BALL_JOINT,
+        position: [0, 2],
+        rotation: Random.range(-20, 40),
+        radius: Random.range(10, 30),
         colors: [Random.color(), Random.color()],
         children: [{
-          type: NodeType.BALL_JOINT,
-          position: [0, 1],
-          rotation: Random.range(0, 30),
-          radius: Random.range(10, 30),
+          type: NodeType.SEGMENT,
+          radius: [
+            Random.range(10, 20),
+            Random.range(30, 50)
+          ],
           colors: [Random.color(), Random.color()],
           children: []
         }]
-      }],
-      mirror: true,
+      }]
+    }]
+  }
+}
+
+export default function generate() {
+  return {
+    type: NodeType.CORE,
+    radius: [Random.range(30, 50), Random.range(20, 40)],
+    colors: [Random.color(), Random.color()],
+    mirror: false,
+    children: [generateLimb(), {
+      type: NodeType.CORE,
+      position: [0, -1],
+      radius: [Random.range(20, 40), Random.range(30, 50)],
+      colors: [Random.color(), Random.color()],
+      children: [{
+        type: NodeType.CORE,
+        position: [0, -1],
+        radius: [Random.range(40, 60), Random.range(40, 60)],
+        colors: [Random.color(), Random.color()],
+        children: [generateLimb()]
+      }]
     }]
   }
 }

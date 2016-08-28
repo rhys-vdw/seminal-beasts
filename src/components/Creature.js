@@ -14,11 +14,11 @@ function BallJoint({ node }) {
 }
 
 function Segment({ node }) {
-  const { width, length, colors } = node
+  const { width, radius, colors } = node
   return (
     <ellipse
-      cx={0} cy={length}
-      rx={width} ry={length}
+      cx={0} cy={radius[1]}
+      rx={radius[0]} ry={radius[1]}
       fill={colors[0]}
     />
   )
@@ -50,20 +50,17 @@ function groupTransform(parent, node, isMirrored) {
     ? parent.radius
     : [parent.radius, parent.radius])
 
-  const rotation = 180 * isMirrored
-    ? -(node.rotation || 0)
-    : node.rotation || 0
+  const rotation = node.rotation || 0
 
   const position = node.position || [0, 0]
 
   const translation = new Vector(0, position[1])
     .rotateDeg(position[0] * 180)
-    .multiply(new Vector(mirrorSign, 1))
     .multiply(scale)
 
   console.log(translation.toString())
 
-  return `translate(${translation.x}, ${translation.y})rotate(${rotation})`
+  return `scale(${mirrorSign}, 1)translate(${translation.x}, ${translation.y})rotate(${rotation})`
 }
 
 function Node({ node, parent, isMirrored }) {
