@@ -2,6 +2,24 @@ import React from 'react'
 import * as NodeType from '../constants/NodeType'
 import Vector from 'victor'
 
+function Iris({ node }) {
+  const { radius, colors, pupilSize } = node
+  return (
+    <g>
+      <ellipse
+        cx={0} cy={0}
+        rx={radius} ry={radius}
+        fill={colors[0]}
+      />
+      <ellipse
+        cx={0} cy={0}
+        rx={pupilSize} ry={pupilSize}
+        fill='black'
+      />
+    </g>
+  )
+}
+
 function Eye({ node }) {
   return (
     <ellipse
@@ -68,6 +86,7 @@ const componentByType = {
   [NodeType.SEGMENT]: Segment,
   [NodeType.MOUTH]: Mouth,
   [NodeType.EYE]: Eye,
+  [NodeType.IRIS]: Iris,
 }
 
 function groupTransform(parent, node, isMirrored) {

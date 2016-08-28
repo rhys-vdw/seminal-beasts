@@ -9,6 +9,7 @@ function generateLimb({ rotation, position }) {
     radius: Random.range(10, 30),
     colors: [Random.color(), Random.color()],
     mirror: true,
+    layer: 1,
     children: [{
       type: NodeType.SEGMENT,
       radius: [
@@ -53,14 +54,14 @@ function generateHead() {
       children: []
     }, {
       type: NodeType.EYE,
-      scale: Random.range(3, 10),
+      scale: Random.range(3, 20),
       mirror: true,
       position: [Random.range(0.1, 0.5), Random.range(0.3, 1)],
       children: [{
         type: NodeType.IRIS,
-        radius: Random.range(5, 10),
+        radius: Random.range(0.1, 0.7),
         colors: [Random.color(), Random.color()],
-        pupilSize: 0.5,
+        pupilSize: Random.range(0.1, 0.5),
         children: []
       }]
     }]
