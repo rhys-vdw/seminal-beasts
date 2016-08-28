@@ -112,9 +112,26 @@ function Segment({ node, children }) {
 }
 
 function Mouth({ node }) {
-  const { size, color } = node
+  const { size, color, curve } = node
   return (
     <g className='Mouth'>
+      <path
+        d={[
+          `M ${-size[0] / 2} 0`,
+          `Q 0 ${curve}, ${size[0] / 2} 0`
+        ].join(' ')}
+        fill={'transparent'}
+        stroke={color}
+        strokeWidth={node.lipThickness}
+        rx={node.borderRadiusX}
+        ry={node.borderRadiusY}
+        strokeLinecap="round"
+      />
+
+    </g>
+  )
+
+  /*
       <rect
         x={-size[0] / 2} y={-size[1] / 2}
         width={size[0]} height={size[1]}
@@ -124,8 +141,7 @@ function Mouth({ node }) {
         rx={node.borderRadiusX}
         ry={node.borderRadiusY}
       />
-    </g>
-  )
+      */
 }
 
 function Core({ node, children }) {
