@@ -6,6 +6,7 @@ function generateLimb({ rotation, position }) {
     type: NodeType.BALL_JOINT,
     position,
     rotation,
+    maxAngle: 20,
     radius: Random.range(10, 30),
     colors: [Random.color(), Random.color()],
     mirror: true,
@@ -19,6 +20,7 @@ function generateLimb({ rotation, position }) {
       colors: [Random.color(), Random.color()],
       children: [{
         type: NodeType.BALL_JOINT,
+        maxAngle: 20,
         position: [0, 2],
         rotation: Random.range(-20, 70),
         radius: Random.range(10, 30),
@@ -46,7 +48,10 @@ function generateHead() {
     children: [{
       type: NodeType.MOUTH,
       colors: [Random.color(), Random.color()],
-      radius: [Random.range(10, 40), Random.range(10, 20)],
+      radius: [Random.range(10, 40), Random.range(1, 20)],
+      lipThickness: Random.range(4, 12),
+      borderRadiusX: Random.range(0, 20),
+      borderRadiusY: Random.range(0, 20),
       position: [0, -Random.range(0, 0.9)],
       children: []
     }, {
@@ -68,6 +73,7 @@ function generateHead() {
 function generateNeck() {
   return {
     type: NodeType.BALL_JOINT,
+    maxAngle: 10,
     position: [0, Random.range(-0.8, -1)],
     rotation: 0,
     radius: Random.range(10, 30),

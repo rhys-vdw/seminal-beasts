@@ -53,18 +53,48 @@ Eye.contextTypes = {
   isBlinking: PropTypes.bool.isRequired,
 }
 
-function BallJoint({ node, children }) {
-  const { radius, colors } = node
-  return (
-    <g className='BallJoint'>
-      <ellipse
-        cx={0} cy={0}
-        rx={radius} ry={radius}
-        fill={colors[0]}
-      />
-      { children }
-    </g>
-  )
+class BallJoint extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = { angle: 0 }
+    this.updateAngle = this.updateAngle.bind(this)
+  }
+
+  updateAngle() {
+    const { maxAngle } = this.props.node;
+    const angle = Random.range(0, maxAngle) - maxAngle / 2
+    this.setState({ angle })
+  }
+
+  componentDidMount() {
+    this.intervalId = setInterval(
+      this.updateAngle,
+      Random.range(300, 500)
+    )
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId)
+  }
+
+  render() {
+    const { node, children } = this.props
+    const { radius, colors } = node
+    const { angle } = this.state
+    return (
+      <g
+        className='BallJoint'
+        style={{ transform: `rotate(${angle}deg)` }}
+      >
+        <ellipse
+          cx={0} cy={0}
+          rx={radius} ry={radius}
+          fill={colors[0]}
+        />
+        { children }
+      </g>
+    )
+  }
 }
 
 function Segment({ node, children }) {
@@ -90,9 +120,9 @@ function Mouth({ node }) {
         width={radius[0]} height={radius[1]}
         fill={'black'}
         stroke={colors[0]}
-        strokeWidth={8}
-        rx={4}
-        ry={4}
+        strokeWidth={node.lipThickness}
+        rx={node.borderRadiusX}
+        ry={node.borderRadiusY}
       />
     </g>
   )
