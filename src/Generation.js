@@ -73,7 +73,7 @@ function generateHead(nextColor) {
 
 function generateNeck(nextColor) {
   return {
-    type: NodeType.BALL_JOINT,
+    type: NodeType.NECK,
     maxAngle: 10,
     position: [0, Random.range(-0.8, -1)],
     rotation: 0,

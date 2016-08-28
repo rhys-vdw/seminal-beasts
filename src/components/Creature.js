@@ -144,6 +144,7 @@ function Core({ node, children }) {
 
 const componentByType = {
   [NodeType.CORE]: Core,
+  [NodeType.NECK]: BallJoint,
   [NodeType.BALL_JOINT]: BallJoint,
   [NodeType.SEGMENT]: Segment,
   [NodeType.MOUTH]: Mouth,
@@ -185,12 +186,20 @@ function Node({ node, parent, isMirrored }) {
     return false
   }
 
+  const counts = {};
+
   const children = node.children.reduce((result, childNode, i) => {
+
+    // Increment count
+    counts[childNode.type] = (counts[childNode.type] || 0) + 1;
+
+    const key = childNode.type + counts[childNode.type]
+
     result.push(
-      <Node key={i} parent={node} node={childNode} />
+      <Node key={key} parent={node} node={childNode} />
     )
     if (childNode.mirror) result.push(
-      <Node key={`${i}-mirrored`}
+      <Node key={`${key}-mirrored`}
         parent={node}
         node={childNode}
         isMirrored={true}
