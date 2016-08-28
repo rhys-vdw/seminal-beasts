@@ -8,7 +8,7 @@ function generateLimb({ rotation, position }) {
     rotation,
     maxAngle: 20,
     size: Random.range(10, 30),
-    colors: [Random.color(), Random.color()],
+    color: Random.color(),
     mirror: true,
     layer: 1,
     children: [{
@@ -17,21 +17,21 @@ function generateLimb({ rotation, position }) {
         Random.range(10, 20),
         Random.range(10, 50)
       ],
-      colors: [Random.color(), Random.color()],
+      color: Random.color(),
       children: [{
         type: NodeType.BALL_JOINT,
         maxAngle: 20,
         position: [0, 2],
         rotation: Random.range(-20, 70),
         size: Random.range(10, 30),
-        colors: [Random.color(), Random.color()],
+        color: Random.color(),
         children: [{
           type: NodeType.SEGMENT,
           size: [
             Random.range(10, 20),
             Random.range(30, 50)
           ],
-          colors: [Random.color(), Random.color()],
+          color: Random.color(),
           children: []
         }]
       }]
@@ -44,10 +44,10 @@ function generateHead() {
     type: NodeType.CORE,
     position: [0, 2],
     size: [Random.range(20, 60), Random.range(20, 60)],
-    colors: [Random.color(), Random.color()],
+    color: Random.color(),
     children: [{
       type: NodeType.MOUTH,
-      colors: [Random.color(), Random.color()],
+      color: Random.color(),
       size: [Random.range(10, 40), Random.range(1, 20)],
       lipThickness: Random.range(4, 12),
       borderRadiusX: Random.range(0, 20),
@@ -62,7 +62,7 @@ function generateHead() {
       children: [{
         type: NodeType.IRIS,
         size: Random.range(0.1, 0.7),
-        colors: [Random.color(), Random.color()],
+        color: Random.color(),
         pupilSize: Random.range(0.1, 0.5),
         children: []
       }]
@@ -77,13 +77,13 @@ function generateNeck() {
     position: [0, Random.range(-0.8, -1)],
     rotation: 0,
     size: Random.range(10, 30),
-    colors: [Random.color(), Random.color()],
+    color: Random.color(),
     children: [{
       type: NodeType.SEGMENT,
       position: [0, 0],
       rotation: 180,
       size: [Random.range(10, 20), Random.range(20, 30)],
-      colors: [Random.color(), Random.color()],
+      color: Random.color(),
       children: [generateHead()]
     }]
   }
@@ -93,7 +93,7 @@ export default function generate() {
   return {
     type: NodeType.CORE,
     size: [Random.range(30, 50), Random.range(20, 40)],
-    colors: [Random.color(), Random.color()],
+    color: Random.color(),
     mirror: false,
     children: [
       generateLimb({
@@ -103,12 +103,12 @@ export default function generate() {
       type: NodeType.CORE,
       position: [0, -1],
       size: [Random.range(20, 40), Random.range(30, 50)],
-      colors: [Random.color(), Random.color()],
+      color: Random.color(),
       children: [{
         type: NodeType.CORE,
         position: [0, -1],
         size: [Random.range(30, 80), Random.range(30, 80)],
-        colors: [Random.color(), Random.color()],
+        color: Random.color(),
         children: [
           generateLimb({
             rotation: Random.range(50, 80),

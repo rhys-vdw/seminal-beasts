@@ -4,13 +4,13 @@ import Vector from 'victor'
 import * as Random from '../Random'
 
 function Iris({ node }) {
-  const { size, colors, pupilSize } = node
+  const { size, color, pupilSize } = node
   return (
     <g>
       <ellipse
         cx={0} cy={0}
         rx={size} ry={size}
-        fill={colors[0]}
+        fill={color}
       />
       <ellipse
         cx={0} cy={0}
@@ -79,7 +79,7 @@ class BallJoint extends PureComponent {
 
   render() {
     const { node, children } = this.props
-    const { size, colors } = node
+    const { size, color } = node
     const { angle } = this.state
     return (
       <g
@@ -89,7 +89,7 @@ class BallJoint extends PureComponent {
         <ellipse
           cx={0} cy={0}
           rx={size} ry={size}
-          fill={colors[0]}
+          fill={color}
         />
         { children }
       </g>
@@ -98,13 +98,13 @@ class BallJoint extends PureComponent {
 }
 
 function Segment({ node, children }) {
-  const { width, size, colors } = node
+  const { width, size, color } = node
   return (
     <g className='Segment'>
       <ellipse
         cx={0} cy={size[1]}
         rx={size[0]} ry={size[1]}
-        fill={colors[0]}
+        fill={color}
       />
       { children }
     </g>
@@ -112,14 +112,14 @@ function Segment({ node, children }) {
 }
 
 function Mouth({ node }) {
-  const { size, colors } = node
+  const { size, color } = node
   return (
     <g className='Mouth'>
       <rect
         x={-size[0] / 2} y={-size[1] / 2}
         width={size[0]} height={size[1]}
         fill={'black'}
-        stroke={colors[0]}
+        stroke={color}
         strokeWidth={node.lipThickness}
         rx={node.borderRadiusX}
         ry={node.borderRadiusY}
@@ -129,13 +129,13 @@ function Mouth({ node }) {
 }
 
 function Core({ node, children }) {
-  const { size, colors } = node
+  const { size, color } = node
   return (
     <g className='Core'>
       <ellipse
         cx={0} cy={0}
         rx={size[0]} ry={size[1]}
-        fill={colors[0]}
+        fill={color}
       />
       { children }
     </g>
