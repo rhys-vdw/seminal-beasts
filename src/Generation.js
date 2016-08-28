@@ -47,8 +47,6 @@ function generateLimb({ rotation, position }, nextColor) {
 
   nestNodes(nodes);
 
-  console.log(nodes);
-
   return nodes[0]
 }
 
