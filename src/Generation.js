@@ -51,6 +51,14 @@ function generateLimb({ rotation, position }, nextColor) {
 }
 
 function generateHead(nextColor) {
+  const iris = {
+    type: NodeType.IRIS,
+    size: Random.range(0.1, 0.7),
+    color: Random.color(),
+    pupilSize: Random.range(0.1, 0.5),
+    children: []
+  }
+
   return {
     type: NodeType.CORE,
     position: [0, 2],
@@ -64,19 +72,20 @@ function generateHead(nextColor) {
       curve: Random.range(10, -20),
       position: [0, -Random.range(0.1, 0.9)],
       children: []
-    }, {
-      type: NodeType.EYE,
-      scale: Random.range(3, 20),
-      mirror: true,
-      position: [Random.range(0.2, 0.5), Random.range(0.3, 1)],
-      children: [{
-        type: NodeType.IRIS,
-        size: Random.range(0.1, 0.7),
-        color: Random.color(),
-        pupilSize: Random.range(0.1, 0.5),
-        children: []
-      }]
-    }]
+    }, ...times(Random.range(1, 3), () => {
+      const isSingle = Random.chance(0.5);
+      return {
+        type: NodeType.EYE,
+        scale: Random.range(3, 20),
+        mirror: !isSingle,
+        position: [
+          isSingle
+            ? 0
+            : Random.range(0.2, 0.5)
+        , Random.range(0.3, 1)],
+        children: [iris]
+      }
+    })]
   }
 }
 
