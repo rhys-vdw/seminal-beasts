@@ -10,7 +10,6 @@ export default class Main extends PureComponent {
   constructor(props) {
     super(props)
     const hash = getHash()
-    debugger
     const seed = hash.length === 0 ? nextSeed() : parseInt(hash)
     this.state = { creature: generateCreature(seed), seed }
     this.handleClick = this.handleClick.bind(this)
@@ -45,11 +44,11 @@ export default class Main extends PureComponent {
 
     return (
       <div className='Main'>
-        <a href={`#${seed}`}>
-          Save
+        <a className='Main-saveLink' href={`#${seed}`}>
+          link to this creature
         </a>
         <div onClick={this.handleClick} >
-          <Creature creature={creature} width={1024} height={768}/>
+          <Creature creature={creature} width={640} height={640}/>
         </div>
       </div>
     );
