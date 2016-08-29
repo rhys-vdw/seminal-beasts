@@ -309,6 +309,10 @@ export default class Creature extends PureComponent {
     this.updateBlink()
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeoutId)
+  }
+
   getChildContext() {
     const { isBlinking } = this.state
     return { isBlinking }
