@@ -1,7 +1,7 @@
 import React, { PureComponent, PropTypes } from 'react'
 import * as NodeType from '../constants/NodeType'
 import Vector from 'victor'
-import * as Random from '../Random'
+import random from '../random'
 
 function Iris({ node }) {
   const { size, color, pupilSize } = node
@@ -62,14 +62,14 @@ class BallJoint extends PureComponent {
 
   updateAngle() {
     const { maxAngle } = this.props.node;
-    const angle = Random.range(0, maxAngle) - maxAngle / 2
+    const angle = random.integer(0, maxAngle) - maxAngle / 2
     this.setState({ angle })
   }
 
   componentDidMount() {
     this.intervalId = setInterval(
       this.updateAngle,
-      Random.range(300, 500)
+      random.integer(300, 500)
     )
   }
 
@@ -299,8 +299,8 @@ export default class Creature extends PureComponent {
     this.setState({ isBlinking: !isBlinking })
 
     const duration = isBlinking
-      ? Random.range(500, 5000)
-      : Random.range(200, 300)
+      ? random.integer(500, 5000)
+      : random.integer(200, 300)
 
     this.timeoutId = setTimeout(this.updateBlink, duration)
   }
