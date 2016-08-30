@@ -51,7 +51,10 @@ export default class Main extends PureComponent {
         >
           link to this creature
         </a>
-        <div onClick={this.handleClick} >
+        <div
+          className='Main-creatureContainer'
+          onClick={this.handleClick}
+        >
           <Creature creature={creature} width='100%' height='100%'/>
         </div>
       </div>

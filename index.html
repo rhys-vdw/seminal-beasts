@@ -7,9 +7,13 @@
       svg * {
         transition: all 0.2s ease-in-out;
       }
+      .Main,
+      .Main-creatureContainer {
+        height: 100%;
+      }
       .Main-saveLink {
         display: block;
-        padding: 20px;
+        padding: 2em;
 
         position: absolute;
         left: 0;
@@ -19,6 +23,11 @@
         color: black;
         text-align: center;
         text-decoration: none;
+      }
+      @media only screen and (max-device-width: 480px) {
+        .Main-saveLink {
+          font-size: 2.5em
+        }
       }
       .Main-saveLink:hover {
         color: gray;
