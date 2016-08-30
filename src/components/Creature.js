@@ -321,10 +321,12 @@ export default class Creature extends PureComponent {
   render() {
     const { creature, width, height } = this.props;
     return (
-      <svg width={width} height={height}>
-        <g transform={`translate(${width / 2}, ${height / 2})`}>
-          <Node node={creature} parent={DEFAULT_PARENT} />
-        </g>
+      <svg
+        width={width}
+        height={height}
+        viewBox={`-300 -300 600 500`}
+      >
+        <Node node={creature} parent={DEFAULT_PARENT} />
       </svg>
     )
   }
