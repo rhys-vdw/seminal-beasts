@@ -44,7 +44,11 @@ export default class Main extends PureComponent {
 
     return (
       <div className='Main'>
-        <a className='Main-saveLink' href={`#${seed}`}>
+        <a
+          className='Main-saveLink'
+          href={`#${seed}`}
+          style={{ color: creature.color }}
+        >
           link to this creature
         </a>
         <div onClick={this.handleClick} >
