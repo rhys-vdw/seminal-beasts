@@ -59,7 +59,6 @@ export default class Main extends PureComponent {
   render() {
     const { isCopied, creature, seed } = this.state
     const linkColor = maxLuminence(creature.color, 0.9)
-    console.log('linkColor', linkColor)
     return (
       <div className='Main'>
         <CopyToClipboard
