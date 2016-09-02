@@ -14,16 +14,24 @@ function maxLuminence(color, max) {
   return Color(hsv)
 }
 
+function setTitle(creature) {
+  const isBright = creature.color.getBrightness() > 128
+  document.title = isBright ? '☺' : '☻'
+}
+
+function updateWindow(seed, creature) {
+  window.location.hash = seed
+  setTitle(creature)
+}
+
 export default class Main extends PureComponent {
   constructor(props) {
     super(props)
     const hash = getHash()
     const seed = hash.length === 0 ? nextSeed() : parseInt(hash)
-    this.state = {
-      creature: generateCreature(seed),
-      seed,
-      isCopied: false
-    }
+    const creature = generateCreature(seed)
+    updateWindow(seed, creature)
+    this.state = { creature, seed, hasBeenShared: false }
     this.handleClick = this.handleClick.bind(this)
     this.handleHashChange = this.handleHashChange.bind(this)
     this.handleCopy = this.handleCopy.bind(this)
@@ -42,9 +50,10 @@ export default class Main extends PureComponent {
   }
 
   setSeed(seed) {
-    window.location.hash = seed
+    const creature = generateCreature(seed)
+    updateWindow(seed, creature)
     this.setState({
-      creature: generateCreature(seed), seed, isCopied: false
+      creature, seed, hasBeenShared: false
     })
   }
 
@@ -53,11 +62,11 @@ export default class Main extends PureComponent {
   }
 
   handleCopy() {
-    this.setState({ isCopied: true })
+    this.setState({ hasBeenShared: true })
   }
 
   render() {
-    const { isCopied, creature, seed } = this.state
+    const { hasBeenShared, creature, seed } = this.state
     const linkColor = maxLuminence(creature.color, 0.9)
     return (
       <div className='Main'>
@@ -70,9 +79,9 @@ export default class Main extends PureComponent {
             href={`#${seed}`}
             style={{ color: linkColor.toRgbString() }}
           >
-            { isCopied
-                ? <span>&#x2661; copied to clipboard &#x2661;</span>
-                : 'share' }
+            { hasBeenShared
+                ? <span className='Main-copied'>♡ copied to clipboard ♡</span>
+                : <span className='Main-share'>share</span> }
           </a>
         </CopyToClipboard>
         <div
