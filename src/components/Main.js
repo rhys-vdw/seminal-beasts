@@ -1,21 +1,30 @@
 import React, { PureComponent } from 'react'
-import generateCreature from '../Generation'
+//import generateCreature from '../Generation'
 import Creature from './Creature'
 import random from '../random'
 import CopyToClipboard from 'react-copy-to-clipboard'
 import Color from 'tinycolor2'
 
-const nextSeed = () => random.integer(0, Math.pow(2, 31))
-const getHash = () => window.location.hash.substr(1)
 
-function maxLuminence(color, max) {
+import { createGenome } from '../genome/GeneFactory'
+import { fromGenome } from '../genome/NodeFactory'
+
+function generateCreature(seed) {
+  const genome = createGenome(seed)
+  return fromGenome(genome)
+}
+
+const nextSeed = () => random.integer(0, Math.pow(2, 31))
+const getHash = () => parseInt(window.location.hash.substr(1))
+
+function maxLightness(color, max) {
   const hsv = color.toHsv()
   hsv.v = Math.min(hsv.v, max)
   return Color(hsv)
 }
 
 function setTitle(creature) {
-  const isBright = creature.color.getBrightness() > 128
+  const isBright = creature.root.color.getBrightness() > 128
   document.title = isBright ? '☺' : '☻'
 }
 
@@ -50,10 +59,14 @@ export default class Main extends PureComponent {
   }
 
   setSeed(seed) {
-    const creature = generateCreature(seed)
-    updateWindow(seed, creature)
-    this.setState({
-      creature, seed, hasBeenShared: false
+    this.setState(prevState => {
+      if (seed !== prevState.seed) {
+        const creature = generateCreature(seed)
+        updateWindow(seed, creature)
+        return {
+          creature, seed, hasBeenShared: false
+        }
+      }
     })
   }
 
@@ -67,7 +80,7 @@ export default class Main extends PureComponent {
 
   render() {
     const { hasBeenShared, creature, seed } = this.state
-    const linkColor = maxLuminence(creature.color, 0.9)
+    const linkColor = maxLightness(creature.root.color, 0.9)
     return (
       <div className='Main'>
         <CopyToClipboard

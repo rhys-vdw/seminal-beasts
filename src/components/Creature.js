@@ -26,7 +26,7 @@ function Iris({ node }) {
   )
 }
 
-function Eye({ node, children }, { isBlinking }) {
+function Eye({ node, children }, { isBlinking, iris }) {
   const scaleY = isBlinking ? 0 : 1;
   return (
     <g
@@ -44,13 +44,14 @@ function Eye({ node, children }, { isBlinking }) {
         strokeWidth={0.3}
         fill='white'
       />
-      { children }
+      <Iris node={iris} />
     </g>
   )
 }
 
 Eye.contextTypes = {
   isBlinking: PropTypes.bool.isRequired,
+  iris: PropTypes.object.isRequired,
 }
 
 class BallJoint extends PureComponent {
@@ -315,7 +316,10 @@ export default class Creature extends PureComponent {
 
   getChildContext() {
     const { isBlinking } = this.state
-    return { isBlinking }
+    return {
+      isBlinking,
+      iris: this.props.creature.iris
+    }
   }
 
   render() {
@@ -326,7 +330,7 @@ export default class Creature extends PureComponent {
         height={height}
         viewBox={`-300 -300 600 500`}
       >
-        <Node node={creature} parent={DEFAULT_PARENT} />
+        <Node node={creature.root} parent={DEFAULT_PARENT} />
       </svg>
     )
   }
@@ -334,4 +338,5 @@ export default class Creature extends PureComponent {
 
 Creature.childContextTypes = {
   isBlinking: PropTypes.bool.isRequired,
+  iris: PropTypes.object.isRequired,
 }
