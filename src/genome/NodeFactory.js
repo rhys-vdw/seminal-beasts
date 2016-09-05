@@ -1,4 +1,4 @@
-import { findIndex, last } from 'lodash'
+import { findIndex, last, sumBy } from 'lodash'
 import { NECK_VALUE, SPLIT, UNSPLIT, BODY, EYE, MOUTH } from '../constants/GeneType'
 import * as NodeType from '../constants/NodeType'
 import { lerp } from '../Math'
@@ -14,12 +14,12 @@ function getColor(gene) {
   })
 }
 
-function createCoreNode(gene) {
+function createCoreNode(genes) {
   return {
     type: NodeType.CORE,
-    size: [lerp(15, 50, gene.width), lerp(15, 40, gene.length)],
+    size: [lerp(15, 35, sumBy(genes, 'width')), lerp(10, 35, sumBy(genes, 'length'))],
     position: [0, -1],
-    color: getColor(gene),
+    color: getColor(last(genes)),
     mirror: false,
     children: []
   }
@@ -166,42 +166,32 @@ export function fromGenome(genome) {
 
   const iris = createIrisNode(genome[0])
 
-  let isSplit = true
+  let isSplit = false
   let limbLength = 0
 
   let root = null;
+
+  // Stack consecutive cores.
+  const coreStack = []
 
   for (let i = 1; i < neckIndex; i++) {
     const gene = genome[i]
     const type = bodyNodeType(gene.type)
 
     if (type === BODY) {
+      if (isSplit && parentStack.length === 1) {
 
-      if (parentStack.length === 0) {
+        // A split has been recorded. This next node must be a shoulder.
+        isSplit = false
+        limbLength = 1
+        const joint = createShoulderNode(gene)
+        last(parentStack).children.push(joint)
+        parentStack.push(joint)
 
-        // First core. Just initialize the parent stack.
-        root = createCoreNode(gene)
-        parentStack.push(root)
+      } else if (parentStack.length < 2) {
 
-      } else if (parentStack.length === 1) {
-
-        // We are still building the core.
-
-        if (isSplit) {
-
-          // A split has been recorded. This next node must be a shoulder.
-          isSplit = false
-          limbLength = 1
-          const joint = createShoulderNode(gene)
-          last(parentStack).children.push(joint)
-          parentStack.push(joint)
-
-        } else { // Not a split
-
-          // Or build a core
-          childAndReplaceLast(parentStack, createCoreNode(gene))
-        }
-
+        // Otherwise count this gene towards the next core.
+        coreStack.push(gene)
       } else {
 
         // Extending an arm
@@ -213,19 +203,36 @@ export function fromGenome(genome) {
           isSplit = false
         }
       }
-    } else if (type === SPLIT) {
-      // Only split if there is at least one core.
-      isSplit = parentStack.length >= 1
-    } else if (type === UNSPLIT) {
 
-      // (split, unsplit) -> ignore
-      isSplit = false
+    // Some other body type. Gotta build the body now.
+    } else {
+      if (coreStack.length > 0) {
+        if (parentStack.length === 0) {
+          // First core. Just initialize the parent stack.
+          root = createCoreNode(coreStack)
+          parentStack.push(root)
 
-      // (joint, unsplit) -> ignore
-      // (segment, unsplit) -> collapse split
-      const parent = last(parentStack)
-      if (parent && parent.type !== NodeType.BALL_JOINT) {
-        popParent(parentStack)
+        } else {
+          // Or build a core
+          childAndReplaceLast(parentStack, createCoreNode(coreStack))
+        }
+
+        // Reset cores
+        coreStack.length = 0
+      } else if (type === SPLIT) {
+        // Only split if there is at least one core.
+        isSplit = parentStack.length >= 1
+      } else if (type === UNSPLIT) {
+
+        // (split, unsplit) -> ignore
+        //isSplit = false
+
+        // (joint, unsplit) -> ignore
+        // (segment, unsplit) -> collapse split
+        const parent = last(parentStack)
+        if (parent && parent.type !== NodeType.BALL_JOINT) {
+          popParent(parentStack)
+        }
       }
     }
   }

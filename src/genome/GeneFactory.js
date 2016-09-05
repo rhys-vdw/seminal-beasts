@@ -75,7 +75,7 @@ export function createGenome(seed) {
   const nextColor = colorMutator(random)
   return [
     createRandomNode(random, randomColor(random)), // IRIS
-    ...times(30, () => createRandomNode(random, nextColor())),
+    ...times(35, () => createRandomNode(random, nextColor())),
     createRandomNode(random, nextColor(), NECK_VALUE), // NECK JOINT
     createRandomNode(random, nextColor()), // NECK SEGMENT
     createRandomNode(random, nextColor()), // HEAD
